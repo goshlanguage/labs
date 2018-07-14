@@ -1,0 +1,32 @@
+# For more example config options see:
+#    https://github.com/kwk/docker-registry-setup/blob/master/auth/config/reference.yml
+server:
+  addr: :5001
+  certificate: /ssl/server.pem
+  key: /ssl/server.key
+token:
+  issuer: auth_service
+  expiration: 900
+users:
+  "": {}
+  admin:
+    password: $2y$05$LO.vzwpWC5LZGqThvEfznu8qhb5SGqvBSWY1J3yZ4AxtMRZ3kN5jC # badmin
+acl:
+- match:
+    account: admin
+  actions: ['*']
+- match:
+    account: /.+/
+    name: ${account}/*
+  actions: ['*']
+- match:
+    type: registry
+    name: catalog
+  actions: ['*']
+  comment: Anonymous users can get catalog.
+- match:
+    account: ""
+    name: /.*/
+  actions: [pull]
+  comment: Anonymous users can pull everything.
+
